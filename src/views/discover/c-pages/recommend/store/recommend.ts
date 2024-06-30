@@ -1,6 +1,6 @@
 import {
   getHotRecommend,
-  // getNewAlbum,
+  getNewAlbum,
   getTopBanner
 } from '../service/recommend'
 
@@ -29,6 +29,9 @@ const recommendSlice = createSlice({
     },
     changeHotRecommendAction(state, { payload }) {
       state.hotRecommends = payload
+    },
+    changeNewAlbumsAction(state, { payload }) {
+      state.newAlbums = payload
     }
   }
 })
@@ -43,11 +46,17 @@ export const fetchRecommendDataAction = createAsyncThunk(
     getHotRecommend().then((res: any) => {
       dispatch(changeHotRecommendAction(res.result))
     })
+    getNewAlbum().then((res: any) => {
+      dispatch(changeNewAlbumsAction(res.albums))
+    })
     return null
   }
 )
 
-export const { changeBannersAction, changeHotRecommendAction } =
-  recommendSlice.actions
+export const {
+  changeBannersAction,
+  changeHotRecommendAction,
+  changeNewAlbumsAction
+} = recommendSlice.actions
 
 export default recommendSlice.reducer

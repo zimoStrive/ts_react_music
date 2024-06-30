@@ -2,8 +2,15 @@ import { useAppDispatch } from '@/store'
 import React, { memo, useEffect } from 'react'
 import type { FC, ReactNode } from 'react'
 import { fetchRecommendDataAction } from './store/recommend'
-import { RecommendWrapper } from './style'
+import {
+  RecommendWrapper,
+  RecommendSection,
+  RecommendLeft,
+  RecommendRight
+} from './style'
 import TopBanner from './c-cpns/top-banner'
+import HotRecommend from './c-cpns/hot-recommend'
+import NewAlbum from './c-cpns/new-album'
 interface IProps {
   children?: ReactNode
 }
@@ -18,6 +25,13 @@ const Recommend: FC<IProps> = () => {
   return (
     <RecommendWrapper>
       <TopBanner />
+      <RecommendSection className="wrap-v2">
+        <RecommendLeft>
+          <HotRecommend />
+          <NewAlbum />
+        </RecommendLeft>
+        <RecommendRight>right</RecommendRight>
+      </RecommendSection>
     </RecommendWrapper>
   )
 }
