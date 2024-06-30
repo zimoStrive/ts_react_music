@@ -59,9 +59,9 @@ class request {
       }
     )
   }
-  request<T = any>(config: requestConfig<T>): Promise<T> {
+
+  request<T = any>(config: requestConfig): Promise<T> {
     return new Promise((resolve, reject) => {
-      // 1.单个请求对请求config的处理
       // 1.单个请求对请求config的处理
       if (config.interceptors?.requestInterceptor) {
         config = config.interceptors.requestInterceptor(
@@ -85,7 +85,7 @@ class request {
           this.showLoading = DEFAULT_LOADING
 
           // 3.将结果resolve返回出去
-          resolve(res.data)
+          resolve(res as T) // 使用 res.data 作为 T 的类型
         })
         .catch((err) => {
           // 将showLoading设置true, 这样不会影响下一个请求
