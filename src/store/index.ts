@@ -3,11 +3,13 @@ import { useSelector, useDispatch } from 'react-redux'
 import type { TypedUseSelectorHook } from 'react-redux'
 import counterReducer from './module/counter'
 import recommendReducer from '@/views/discover/c-pages/recommend/store/recommend'
+import playReducer from '@/views/player/store/player'
 
 const store = configureStore({
   reducer: {
     counter: counterReducer,
-    recommend: recommendReducer
+    recommend: recommendReducer,
+    player: playReducer
   }
 })
 
