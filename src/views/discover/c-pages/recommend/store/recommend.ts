@@ -1,23 +1,33 @@
 import {
   getHotRecommend,
   getNewAlbum,
-  getTopBanner
+  getPlayListDetail,
+  getTopBanner,
+  getArtistList
 } from '../service/recommend'
-
+import { RootState } from '@/store'
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
+
+export const rankingMap = {
+  upRanking: 19723756,
+  newRanking: 3779629,
+  originRanking: 2884035
+}
 
 interface RecommendState {
   banners: any[]
   hotRecommends: any[]
   newAlbums: any[]
   rankings: any[]
+  settleSingers: any[]
 }
 
 const initialState: RecommendState = {
   banners: [],
   hotRecommends: [],
   newAlbums: [],
-  rankings: []
+  rankings: [],
+  settleSingers: []
 }
 
 const recommendSlice = createSlice({
@@ -32,6 +42,12 @@ const recommendSlice = createSlice({
     },
     changeNewAlbumsAction(state, { payload }) {
       state.newAlbums = payload
+    },
+    changeRankingsAction(state, { payload }) {
+      state.rankings = payload
+    },
+    changeSettleSingerAction(state, { payload }) {
+      state.settleSingers = payload
     }
   }
 })
@@ -53,10 +69,40 @@ export const fetchRecommendDataAction = createAsyncThunk(
   }
 )
 
+export const fetchRankingDataAction = createAsyncThunk<
+  void,
+  void,
+  { state: RootState }
+>('ranking', (_, { dispatch }) => {
+  const promises: Promise<any>[] = []
+  let key: keyof typeof rankingMap
+
+  for (key in rankingMap) {
+    const id = rankingMap[key]
+    console.log(id, 'id')
+    promises.push(getPlayListDetail(id))
+  }
+
+  Promise.all(promises).then((res) => {
+    const rankings = res.map((item) => item.playlist)
+    dispatch(changeRankingsAction(rankings))
+  })
+})
+
+export const fetchSettleSingerAction = createAsyncThunk(
+  'settlesinger',
+  async (_, { dispatch }) => {
+    const res = await getArtistList(5001, 5)
+    dispatch(changeSettleSingerAction(res.artists))
+  }
+)
+
 export const {
   changeBannersAction,
   changeHotRecommendAction,
-  changeNewAlbumsAction
+  changeNewAlbumsAction,
+  changeRankingsAction,
+  changeSettleSingerAction
 } = recommendSlice.actions
 
 export default recommendSlice.reducer
